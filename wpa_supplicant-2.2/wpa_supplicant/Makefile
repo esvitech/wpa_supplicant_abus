@@ -2,9 +2,10 @@ ifndef CC
 CC=gcc
 endif
 
-ifndef CFLAGS
-CFLAGS = -MMD -O2 -Wall -g
-endif
+CFLAGS += -MMD -O2 -Wall -g -I../../../staging/usr/include/abus/ -pthread
+
+LDFLAGS += -pthread
+LIBS += -L../../../staging/usr/lib/ -labus -ljson -lhashtab
 
 export LIBDIR ?= /usr/local/lib/
 export BINDIR ?= /usr/local/sbin/
@@ -68,6 +69,8 @@ endif
 
 OBJS = config.o
 OBJS += notify.o
+OBJS += abus_lib.o
+OBJS += abus_service.o
 OBJS += bss.o
 OBJS += eap_register.o
 OBJS += ../src/utils/common.o
@@ -103,7 +106,7 @@ OBJS += ../src/utils/trace.o
 OBJS_p += ../src/utils/trace.o
 OBJS_c += ../src/utils/trace.o
 OBJS_priv += ../src/utils/trace.o
-LDFLAGS += -rdynamic
+LDFLAGS += -rdynamic  
 CFLAGS += -funwind-tables
 ifdef CONFIG_WPA_TRACE_BFD
 CFLAGS += -DPACKAGE="wpa_supplicant" -DWPA_TRACE_BFD
@@ -294,13 +297,13 @@ include ../src/drivers/drivers.mak
 ifdef CONFIG_AP
 OBJS_d += $(DRV_BOTH_OBJS)
 CFLAGS += $(DRV_BOTH_CFLAGS)
-LDFLAGS += $(DRV_BOTH_LDFLAGS)
+LDFLAGS += $(DRV_BOTH_LDFLAGS)  
 LIBS += $(DRV_BOTH_LIBS)
 else
 NEED_AP_MLME=
 OBJS_d += $(DRV_WPA_OBJS)
 CFLAGS += $(DRV_WPA_CFLAGS)
-LDFLAGS += $(DRV_WPA_LDFLAGS)
+LDFLAGS += $(DRV_WPA_LDFLAGS)  
 LIBS += $(DRV_WPA_LIBS)
 endif
 
